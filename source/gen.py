@@ -18,11 +18,11 @@ file = ""
 def save_and_exit(generated_strings_list):
     global file
     output_file = file
-    print(f"\n\nГенерация завершена. Все строки сохраняются в файл {output_file}.")
+    print(f"\n\nDie Generierung ist abgeschlossen. Alle Zeilen werden in der Datei {output_file}.")
     with open(output_file, "a") as f:
         f.write("\n".join(generated_strings_list) + "\n")
-    print(f"Все строки сохранены в файл {output_file}.")
-    system(f"title Закончил генерацию строк в файле {output_file}")
+    print(f"Alle Zeilen werden in einer Datei gespeichert {output_file}.")
+    system(f"title Generierung der Zeilen in der Datei ist abgeschlossen {output_file}")
 
 def generate_random_string(length):
     characters = ascii_letters + digits + "#?&!" + ascii_letters + digits + "#?&!"
@@ -38,7 +38,7 @@ def generate_unique_strings(num_strings):
         while generated_strings < num_strings:
             new_string = generate_random_string(8)
             if gen_flag.is_set():
-                print("\n\nЭкстренное завершение. Сохранение данных...") 
+                print("\n\nNotabschaltung. Speichern von Daten...") 
                 break
             if new_string not in seen_strings:
                 seen_strings.add(new_string)
@@ -49,32 +49,32 @@ def generate_unique_strings(num_strings):
                 eta_formatted = str(timedelta(seconds=int(eta)))
                 speed = generated_strings / elapsed_time.total_seconds()
                 elapsed_formatted = str(elapsed_time).split('.')[0]
-                progress = f"Сгенерировано: {generated_strings}/{num_strings} строк (ETA: {eta_formatted}, Время: {elapsed_formatted}, Скорость генерации: {speed:.2f} строк/сек)             "
+                progress = f"Erzeugt: {generated_strings}/{num_strings} Zeilen (ETA: {eta_formatted}, Zeit: {elapsed_formatted}, Erzeugungsrate: {speed:.2f} Zeilen/Sek.)             "
                 print("\r" + progress, end="")
                 generated_strings_list.append(new_string) 
     except Exception as e:
-        print(f"Ошибка: \n\n{str(e)}\n\n")
-        print("\n\nЭкстренное завершение. Сохранение данных...")
+        print(f"Fehler: \n\n{str(e)}\n\n")
+        print("\n\nBeendigung im Notfall. Speichern von Daten...")
         save_and_exit(generated_strings_list)
     return generated_strings_list
 
 def main():
     global running, nstg, file
-    file = input("Введите имя файла: ")
+    file = input("Geben Sie einen Dateinamen ein (Bitte ggf. zuvor eine leere Datei mit dem Namen anlegen): ")
     if path.exists(file):
-        num_strings_to_generate = int(input("Введите количество строк для генерации: "))
+        num_strings_to_generate = int(input("Geben Sie die Anzahl der zu erzeugenden Zeilen ein: "))
         nstg = num_strings_to_generate
     else:
-        print("Файл не существует..")
+        print("Die Datei existiert nicht..")
         main()
 
-    print("\nНачало генерации...\n")
+    print("\nBeginn der Erzeugung...\n")
     running = True
     generated_strings_list = generate_unique_strings(num_strings_to_generate)
 
     save_and_exit(generated_strings_list)
     running = False
-    input("Нажмите ENTER чтобы завершить работу программы.\n")
+    input("Drücken Sie ENTER, um das Programm zu beenden..\n")
 
 # Thread 2
 
@@ -86,7 +86,7 @@ def Title_update():
         current_process = Process(getpid())
         ram = (current_process.memory_info().rss // 1024 // 1024) - 3
         cpu = current_process.cpu_percent(interval=0.5)
-        system(f"title Генерирую {nstg} строк. Использованно RAM: {ram} MB, Используется CPU: {cpu}")
+        system(f"title Erzeugen von {nstg} Zeilen. Verwendet RAM: {ram} MB, CPU Vebrauch: {cpu}")
         sleep(1)
 
 if __name__ == "__main__":
@@ -103,7 +103,7 @@ if __name__ == "__main__":
                 break
             sleep(0.1)
     except KeyboardInterrupt:
-        print("\nПрерывание с клавиатуры обнаружено. Останавливаю потоки...")
+        print("\nTastaturunterbrechung erkannt. Anhalten von Streams...")
         gen_flag.set()
 
     first_thread.join()
